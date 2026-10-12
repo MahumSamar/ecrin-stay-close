@@ -15,8 +15,6 @@
   --ink:#0b0b0b; --paper:#fdfdfd; --white:#ffffff; --sea:#1b2a36;
   --serif:"Libre Caslon Display","Libre Caslon Text",Georgia,"Times New Roman",serif;
   --sans:"Hanken Grotesk","HK Grotesk",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
-  --hero-img:url(/assets/hero.webp);
-  --soap-img:url(/assets/soap.webp);
   /* true visible viewport height (mobile browser chrome excluded) */
   --vh:100vh;
 }
@@ -67,12 +65,14 @@ h2,h3,p{margin:0;font-weight:400}
    (1) keeps the reference's centred framing when possible,
    (2) lifts the photo so the chin clears the text zone,
    (3) never lets the nose leave the top edge — the face is never cropped.  */
-.hero__media{position:absolute;inset:0;z-index:-1;pointer-events:none;
-  background:var(--hero-img) 50% 0%/cover no-repeat} /* fallback: top-anchored so the face can never be cut */
+.hero__media{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+/* the film is 21:9 — the same ratio as the photo — so it takes the photo's exact geometry */
+.hero__media video{position:absolute;left:0;top:0;width:100%;height:100%;display:block;
+  object-fit:cover;object-position:50% 0%} /* fallback: top-anchored so the face can never be cut */
 @supports (width:1cqw){
-  .hero__media{
-    background-size:var(--iw) var(--ih);
-    background-position:calc((100cqw - var(--iw)) / 2) var(--y);
+  .hero__media video{
+    left:calc((100cqw - var(--iw)) / 2);top:var(--y);
+    width:var(--iw);height:var(--ih);
   }
 }
 .hero::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:rgba(53,88,143,.10)} /* cool grade sampled from reference water */
@@ -106,7 +106,8 @@ h2,h3,p{margin:0;font-weight:400}
 .footer__legal,.footer__meta{display:flex;justify-content:space-between;align-items:baseline}
 .footer__media{position:relative;min-width:0;overflow:hidden;background:#e9e4dc}
 /* photo layer: cover, anchored top-left, zoomed 1.0597× exactly as in the artboard (1060.1px over a 1001px panel) */
-.footer__media::before{content:"";position:absolute;inset:0;background:var(--soap-img) 0 0/cover no-repeat;transform:scale(1.0597);transform-origin:0 0}
+.footer__media video{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;
+  object-fit:cover;object-position:0 0;transform:scale(1.0597);transform-origin:0 0}
 .footer__media::after{content:"";position:absolute;inset:0;pointer-events:none;background:rgba(155,180,210,.10)} /* grade sampled from reference */
 .footer__meta{position:absolute;z-index:1;text-shadow:0 0 2px rgba(255,255,255,.75),0 0 5px rgba(255,255,255,.4)}
 
@@ -167,7 +168,7 @@ h2,h3,p{margin:0;font-weight:400}
   .footer__col li + li{margin-top:calc(var(--s) * 6)}
   .footer__legal{margin-top:calc(var(--s) * 16);padding-bottom:calc(var(--s) * 14);font-size:calc(var(--s) * 11);line-height:calc(var(--s) * 16)}
   .footer__media{flex:1 1 auto}
-  .footer__media::before{background-position:52% 46%;transform:none}
+  .footer__media video{object-position:52% 46%;transform:none}
   .footer__meta{left:calc(var(--s) * 20);right:calc(var(--s) * 20);bottom:calc(var(--s) * 12);font-size:calc(var(--s) * 11);line-height:calc(var(--s) * 16)}
 }
 
@@ -195,7 +196,7 @@ h2,h3,p{margin:0;font-weight:400}
   .footer__col li + li{margin-top:calc(var(--m) * 9)}
   .footer__legal{padding:calc(var(--m) * 20) 0 calc(var(--m) * 18);font-size:calc(var(--m) * 12);line-height:calc(var(--m) * 17)}
   .footer__media{height:calc(var(--m) * 150)}
-  .footer__media::before{background-position:52% 46%;transform:none}
+  .footer__media video{object-position:52% 46%;transform:none}
   .footer__meta{left:calc(var(--m) * 24);right:calc(var(--m) * 24);bottom:calc(var(--m) * 14);font-size:calc(var(--m) * 11.5);line-height:calc(var(--m) * 16)}
 }
 @media (prefers-reduced-motion:reduce){ *{transition:none!important} }
@@ -236,7 +237,9 @@ h2,h3,p{margin:0;font-weight:400}
 <body>
 <div class="page">
   <section class="hero" aria-labelledby="hero-title">
-    <div class="hero__media" aria-hidden="true"></div>
+    <div class="hero__media" aria-hidden="true">
+      <video src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261012_100425_cf8fed44-ab19-4e36-9a4c-f4818e95e561.mp4" autoplay muted playsinline preload="auto" disablepictureinpicture></video>
+    </div>
     <div class="hero__inner">
       <h2 class="hero__title" id="hero-title">Stay close. Quietly.</h2>
       <p class="hero__text">We don’t send noise. Just slow letters — with scents, thoughts and something worth waiting for. You’ll be<br> the first to know about new aromas, restocks, and private rituals.</p>
@@ -274,6 +277,7 @@ h2,h3,p{margin:0;font-weight:400}
       <div class="footer__legal"><a href="#">Privacy policy</a><a href="#">Terms &amp; conditions</a></div>
     </div>
     <div class="footer__media" role="img" aria-label="An ÉCRIN soap bar resting in lathered water">
+      <video src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261012_100513_2f26741a-8411-4aa6-bda4-f8c6823a81ca.mp4" poster="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/1342e81b-ddce-4a71-8d9a-65ff2c67dd97.webp" autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-hidden="true"></video>
       <div class="footer__meta"><a href="mailto:contact@ecrin.com">contact@ecrin.com</a><span class="footer__copy">All rights reserved © 2024 ÉCRIN.</span></div>
     </div>
   </footer>
